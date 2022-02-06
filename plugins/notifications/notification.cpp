@@ -22,6 +22,11 @@
 #include <knotifications_version.h>
 #include <QJsonArray>
 
+//UDP
+#include <winsock2.h>
+#include <stdio.h>
+#include <tchar.h>
+
 #include <core/filetransferjob.h>
 #include <core/notificationserverinfo.h>
 
@@ -72,12 +77,34 @@ void Notification::dismiss()
     }
 }
 
+int sendUdp(std::string message) {
+
+    int server_port = 42069;
+
+    WSADATA wsaData;
+    WSAStartup(0x0202, &wsaData);
+
+    struct sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    serverAddr.sin_port = htons((u_short) server_port);
+
+    int clientSock = socket(PF_INET, SOCK_DGRAM, 0);
+    sendto(clientSock, message.c_str(), message.length(), 0, (LPSOCKADDR) &serverAddr, sizeof(struct sockaddr));
+    closesocket(clientSock);
+
+    WSACleanup();
+
+    return 0;
+}
+
 void Notification::show()
 {
     m_ready = true;
     Q_EMIT ready();
     if (!m_silent) {
         m_notification->sendEvent();
+        sendUdp("{messageType: 1, index: 0, timeout: 5, height: 175, opacity: 0.9, volume: 0, audioPath: '', title: '"+m_title.toHtmlEscaped().toStdString()+"', content: '"+m_text.toHtmlEscaped().toStdString()+"', useBase64Icon: false, icon: '', sourceApp: 'KDE Connect'}");
     }
 }
 
