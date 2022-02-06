@@ -1,7 +1,7 @@
 # MODIFIED VERSION OF KDE CONNECT
-## Please note this is a modified version of the original app. It is basically the exact same code with one added function: notifications are sent to XSOverlay through UDP to show within VR headsets.
+## Please note this is a modified version of the original app. It is basically the exact same code with one added function: notifications are sent to XSOverlay through UDP to show up within VR headsets.
 
-# ORIGINAL README FROM KDE REPO
+# ORIGINAL README FROM KDE REPO:
 ## KDE Connect - desktop app
 
 KDE Connect is a multi-platform app that allows your devices to communicate (eg: your phone and your computer).
