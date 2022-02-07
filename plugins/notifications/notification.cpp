@@ -104,8 +104,19 @@ void Notification::show()
     Q_EMIT ready();
     if (!m_silent) {
         m_notification->sendEvent();
-        sendUdp("{messageType: 1, index: 0, timeout: 5, height: 175, opacity: 0.9, volume: 0, audioPath: '', title: '"+m_title.toHtmlEscaped().toStdString()+"', content: '"+m_text.toHtmlEscaped().toStdString()+"', useBase64Icon: false, icon: '', sourceApp: 'KDE Connect'}");
     }
+
+    //XSOverlay
+    std::string xstitle = "["+m_appName.toStdString()+"] "+m_title.toHtmlEscaped().toStdString();
+    std::string xsmsg = m_text.toHtmlEscaped().toStdString();
+
+    if(xsmsg.length() > 159) {
+        xsmsg = xsmsg.substr(0,159)+" [...]";
+    }
+    if(xstitle.length() > 59){
+        xstitle = xstitle.substr(0,59)+" (...)";
+    }
+    sendUdp("{messageType: 1, index: 0, timeout: 5, height: 175, opacity: 0.9, volume: 0, audioPath: '', title: '"+xstitle+"', content: '"+xsmsg+"', useBase64Icon: false, icon: '', sourceApp: 'KDE Connect'}");
 }
 
 void Notification::update(const NetworkPacket& np)
